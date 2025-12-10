@@ -21,6 +21,7 @@ import { AdminDashboard, AdminDrivers, AdminSupport } from "@/components/admin/A
 import { BottomNav } from "@/components/shared/BottomNav";
 import { ChatRoom } from "@/components/shared/ChatRoom";
 import { WalletScreen } from "@/components/shared/WalletScreen";
+import { NotificationScreen } from "@/components/shared/NotificationScreen";
 
 // Types
 type AuthScreen = "onboarding" | "login" | "register";
@@ -159,12 +160,13 @@ const Index = () => {
         {currentScreen === "home" && (
           <CustomerHome
             onBooking={handleStartBooking}
-            onNotifications={() => {}}
+            onNotifications={() => setCurrentScreen("notifications")}
             onSelectPet={() => {}}
             onPromoDetails={() => {}}
             onBookingHistory={() => {}}
           />
         )}
+        {currentScreen === "notifications" && <NotificationScreen />}
         {currentScreen === "booking-flow" && (
           <BookingFlow
             onBack={handleBack}
@@ -198,7 +200,7 @@ const Index = () => {
           />
         )}
 
-        {!["booking-flow", "driver-search", "live-trip", "chat-room"].includes(currentScreen) && (
+        {!["booking-flow", "driver-search", "live-trip", "chat-room", "notifications"].includes(currentScreen) && (
           <BottomNav role="customer" activeTab={activeTab} onTabChange={handleTabChange} />
         )}
       </>
