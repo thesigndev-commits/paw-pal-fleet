@@ -145,8 +145,8 @@ export function AdminDrivers({ onBack }: AdminDriversProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const pendingDrivers = [
-    { id: "p1", name: "New Driver 1", phone: "+66 81 111 1111", status: "pending", avatar: "" },
-    { id: "p2", name: "New Driver 2", phone: "+66 82 222 2222", status: "pending", avatar: "" },
+    { id: "p1", name: "New Driver 1", phone: "+66 81 111 1111", status: "pending", avatar: "", rating: 0, totalTrips: 0 },
+    { id: "p2", name: "New Driver 2", phone: "+66 82 222 2222", status: "pending", avatar: "", rating: 0, totalTrips: 0 },
   ];
 
   const allDrivers = [...pendingDrivers, ...mockDrivers.map(d => ({ ...d, status: "approved" }))];
@@ -197,14 +197,14 @@ export function AdminDrivers({ onBack }: AdminDriversProps) {
           <Card key={driver.id} variant="default" className="p-4">
             <div className="flex items-center gap-4">
               <AppAvatar 
-                src={'avatar' in driver ? driver.avatar : undefined} 
+                src={driver.avatar || undefined} 
                 fallback={driver.name.charAt(0)} 
                 size="lg" 
               />
               <div className="flex-1">
                 <p className="font-bold">{driver.name}</p>
                 <p className="text-sm text-muted-foreground">{driver.phone}</p>
-                {'rating' in driver && (
+                {driver.rating > 0 && (
                   <div className="flex items-center gap-1 mt-1">
                     <span className="text-warning">★</span>
                     <span className="text-sm">{driver.rating}</span>

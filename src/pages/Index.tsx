@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAppStore } from "@/store/appStore";
+import { useAppStore, UserRole } from "@/store/appStore";
 
 // Auth screens
 import { OnboardingScreen } from "@/components/auth/OnboardingScreen";
@@ -24,9 +24,6 @@ import { WalletScreen } from "@/components/shared/WalletScreen";
 
 // Types
 type AuthScreen = "onboarding" | "login" | "register";
-type CustomerScreen = "home" | "bookings" | "chat" | "wallet" | "profile" | "booking-flow" | "driver-search" | "live-trip" | "chat-room";
-type DriverScreen = "home" | "earnings" | "chat" | "profile" | "trip" | "chat-room";
-type AdminScreen = "dashboard" | "users" | "drivers" | "support" | "settings" | "chat-room";
 
 const Index = () => {
   const { isAuthenticated, user, setTheme, theme } = useAppStore();
@@ -54,7 +51,7 @@ const Index = () => {
   }, [theme]);
 
   // Role switcher for demo
-  const switchRole = (role: 'customer' | 'driver' | 'admin') => {
+  const switchRole = (role: UserRole) => {
     useAppStore.getState().switchRole(role);
     setActiveTab(role === 'admin' ? 'dashboard' : 'home');
     setCurrentScreen(role === 'admin' ? 'dashboard' : 'home');
@@ -129,31 +126,35 @@ const Index = () => {
 
   const role = user?.role || "customer";
 
+  // Role switcher component
+  const RoleSwitcher = () => (
+    <div className="fixed top-4 right-4 z-50 flex gap-1 bg-card/90 backdrop-blur rounded-full p-1 shadow-lg border border-border">
+      <button 
+        onClick={() => switchRole("customer")}
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "customer" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+      >
+        Customer
+      </button>
+      <button 
+        onClick={() => switchRole("driver")}
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "driver" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+      >
+        Driver
+      </button>
+      <button 
+        onClick={() => switchRole("admin")}
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "admin" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+      >
+        Admin
+      </button>
+    </div>
+  );
+
   // Render customer screens
   if (role === "customer") {
     return (
       <>
-        {/* Role switcher for demo */}
-        <div className="fixed top-4 right-4 z-50 flex gap-1 bg-card/90 backdrop-blur rounded-full p-1 shadow-lg border border-border">
-          <button 
-            onClick={() => switchRole("customer")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "customer" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Customer
-          </button>
-          <button 
-            onClick={() => switchRole("driver")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "driver" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Driver
-          </button>
-          <button 
-            onClick={() => switchRole("admin")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "admin" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Admin
-          </button>
-        </div>
+        <RoleSwitcher />
 
         {currentScreen === "home" && (
           <CustomerHome
@@ -208,27 +209,7 @@ const Index = () => {
   if (role === "driver") {
     return (
       <>
-        {/* Role switcher for demo */}
-        <div className="fixed top-4 right-4 z-50 flex gap-1 bg-card/90 backdrop-blur rounded-full p-1 shadow-lg border border-border">
-          <button 
-            onClick={() => switchRole("customer")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "customer" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Customer
-          </button>
-          <button 
-            onClick={() => switchRole("driver")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "driver" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Driver
-          </button>
-          <button 
-            onClick={() => switchRole("admin")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "admin" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Admin
-          </button>
-        </div>
+        <RoleSwitcher />
 
         {currentScreen === "home" && (
           <DriverHome
@@ -267,27 +248,7 @@ const Index = () => {
   if (role === "admin") {
     return (
       <>
-        {/* Role switcher for demo */}
-        <div className="fixed top-4 right-4 z-50 flex gap-1 bg-card/90 backdrop-blur rounded-full p-1 shadow-lg border border-border">
-          <button 
-            onClick={() => switchRole("customer")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "customer" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Customer
-          </button>
-          <button 
-            onClick={() => switchRole("driver")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "driver" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Driver
-          </button>
-          <button 
-            onClick={() => switchRole("admin")}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${role === "admin" ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
-          >
-            Admin
-          </button>
-        </div>
+        <RoleSwitcher />
 
         {currentScreen === "dashboard" && (
           <AdminDashboard onNavigate={(screen) => setCurrentScreen(screen)} />
